@@ -1,0 +1,28 @@
+class Solution:
+    def combinationSum(self, candidates: list[int], target: int) -> list[list[int]]:
+        res = []
+        # Sort candidates to optimize pruning
+        candidates.sort()
+        
+        def backtrack(i, current_combination, current_sum):
+            # Base Case: Found a valid combination
+            if current_sum == target:
+                res.append(list(current_combination))
+                return
+            
+            # Base Case: Exceeded target or out of bounds
+            if current_sum > target or i >= len(candidates):
+                return
+            
+            # Choice 1: Include the current candidate (allow reuse by staying at index i)
+            current_combination.append(candidates[i])
+            backtrack(i, current_combination, current_sum + candidates[i])
+            
+            # Backtrack: Undo the choice
+            current_combination.pop()
+            
+            # Choice 2: Skip the current candidate and move to the next index
+            backtrack(i + 1, current_combination, current_sum)
+            
+        backtrack(0, [], 0)
+        return res
